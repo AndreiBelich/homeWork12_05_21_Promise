@@ -2,6 +2,7 @@
 
 const cardsContainer = document.querySelector(".usersProfiles");
 const users = [];
+/*start fetch and promise*/
 fetch("./assets/js/data.json")
   .then((data) => {
     return data.json();
@@ -36,6 +37,7 @@ function promiseHandler(image){
     image.addEventListener("error", () => reject());
   });
 }
+/*end fetch and promise*/
 
 
 function createUserCard({id, firstName, lastName, profilePicture, contacts}){
