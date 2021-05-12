@@ -2,7 +2,7 @@
 
 const cardsContainer = document.querySelector(".usersProfiles");
 const users = [];
-fetch("./assets/js/data1.json")
+fetch("./assets/js/data.json")
   .then((data) => {
     return data.json();
   })
@@ -14,12 +14,27 @@ fetch("./assets/js/data1.json")
     console.log(error);
   });
 
-function errorImageHandler({target}){
-  target.hidden = true;
+function createImage(id, profilePicture){
+  const image = createElement("img", 
+    {
+      classNames: ["userImage"], 
+      attributes: {
+        src: profilePicture,
+        alt: `user id = ${id}`,
+        hidden: false
+    }
+  });
+  promiseHandler(image)
+                    .then(() => image.hidden = false)
+                    .catch(() => image.remove());
+  return image;
 }
-
-function loadImageHandler({target}){
-  target.hidden = false;
+  
+function promiseHandler(image){
+  return new Promise((resolve, reject) => {
+    image.addEventListener("load", () => resolve());
+    image.addEventListener("error", () => reject());
+  });
 }
 
 
@@ -34,7 +49,6 @@ function createUserCard({id, firstName, lastName, profilePicture, contacts}){
 }
 
 
-
 function createImageWrapper(id, profilePicture, firstName, lastName){
   const fullName = getFullName(firstName, lastName);
   const initialsText = fullName.length ? firstName[0] + lastName[0] : "UP";
@@ -44,16 +58,7 @@ function createImageWrapper(id, profilePicture, firstName, lastName){
   return imageWrapper;
 }
 
-function createImage(id, profilePicture){
-  return createElement("img", {classNames: ["userImage"], handlers: {
-    error : errorImageHandler,
-    load : loadImageHandler
-  }, attributes: {
-    src: profilePicture,
-    alt: `user id = ${id}`,
-    hidden: false
-  }});
-}
+
 
 function createSocialBlock(contacts){
   const socialIcons = contacts.map((contact) => {
@@ -90,6 +95,3 @@ function createSocialBlock(contacts){
   });
   return createElement("div", {classNames: ["socials"]}, ...socialIcons);
 }
-
-/*Utils*/
-
